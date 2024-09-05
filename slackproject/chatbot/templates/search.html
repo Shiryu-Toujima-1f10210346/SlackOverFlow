@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlackOverFlow</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <img src="{% static 'images/header_image.png' %}" alt="Logo"> <!-- 画像を追加 -->
+            <h1>SlackOverFlow</h1>
+        </div>
+        <main class="chat-container">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Slackの会話履歴について質問してください...">
+                <button id="send-button">送信</button>
+            </div>
+        </main>
+    </div>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
