@@ -8,6 +8,7 @@ load_dotenv()
 slack_token = os.getenv('SLACK_API_TOKEN')
 client = WebClient(token=slack_token)
 print('Slack APIトークン:', slack_token)
+print('OPenAI APIトークン:', os.getenv('OPENAI_API_KEY'))
 
 def get_all_channel_history():
     # Slackから全チャンネルの会話履歴を取得する処理

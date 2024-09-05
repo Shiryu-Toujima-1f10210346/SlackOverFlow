@@ -88,7 +88,7 @@ def build_rag_retriever():
     all_history = get_all_channel_history()
 
     # 取得した会話を一つのテキストに結合
-    all_text = " ".join([f"name:{h['display_name']}, message:{h['text']}, time:{h['ts']}" for h in all_history])
+    all_text = " ".join([f"[name:{h['display_name']}, message:{h['text']}, time:{h['ts']}]" for h in all_history])
     all_text = all_text.replace("\n", " ")  # 改行をスペースに変換
 
     # テキストをチャンクに分割
