@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slack RAG Chatbot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Slack RAG Chatbot</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form id="question-form" method="GET" action="{% url 'get_answer_to_view' %}">
+                    <div class="form-group">
+                        <label for="question">質問を入力してください:</label>
+                        <input type="text" id="question" name="question" class="form-control" placeholder="質問を入力..." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">送信</button>
+                </form>
+                <hr>
+                <div id="answer" class="mt-4">
+                    <!-- 回答の表示エリア -->
+                </div>
+                <div id="reference" class="mt-4">
+                    <!-- 参考文献の表示エリア -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for handling AJAX requests -->
+    <script>
+        document.getElementById('question-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const question = document.getElementById('question').value;
+
+            fetch(`{% url 'get_answer_to_view' %}?question=${encodeURIComponent(question)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('answer').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                        document.getElementById('reference').innerHTML = '';
+                    } else {
+                        document.getElementById('answer').innerHTML = `<h5>回答:</h5><p>${data.answer}</p>`;
+                        document.getElementById('reference').innerHTML = `<h5>参考文献:</h5><p>${data.reference}</p>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('answer').innerHTML = `<div class="alert alert-danger">エラーが発生しました。</div>`;
+                    document.getElementById('reference').innerHTML = '';
+                });
+        });
+    </script>
+</body>
+</html>
