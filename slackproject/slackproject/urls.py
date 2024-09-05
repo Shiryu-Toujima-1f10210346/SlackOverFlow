@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from chatbot import views
 
 urlpatterns = [
+    path('',views.search_view, name='search'),
     path('admin/', admin.site.urls),
+    path('search/', views.search_view, name='search'),  # Add this new URL for the chatbot search
 ]

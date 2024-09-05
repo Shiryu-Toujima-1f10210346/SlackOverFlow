@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.app-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.app-header {
+    background-color: #007bff; /* 青色に変更 */
+    color: white;
+    padding: 1rem; /* ヘッダーの高さを維持するためのパディング */
+    text-align: left; /* テキストと画像を左に配置 */
+    display: flex; /* Flexboxを使用してアイテムを横に並べる */
+    align-items: center; /* アイテムを中央に配置 */
+    /* ヘッダーの高さを変更したくない場合は、paddingを調整してください */
+}
+
+.app-header img {
+    max-height: 50px; /* 画像の高さを50pxに制限 */
+    max-width: 100px; /* 画像の幅を100pxに制限 */
+    margin-right: 1rem; /* 画像とテキストの間に余白を追加 */
+}
+.app-header {
+    background-color: #4a154b;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.chat-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.message {
+    max-width: 70%;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    clear: both;
+}
+
+.user-message {
+    background-color: #007a5a;
+    color: white;
+    float: right;
+}
+
+.ai-message {
+    background-color: #e8e8e8;
+    color: black;
+    float: left;
+}
+
+.input-area {
+    display: flex;
+    margin-top: auto;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#send-button {
+    padding: 0.5rem 1rem;
+    background-color: #007a5a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #00694e;
+}
