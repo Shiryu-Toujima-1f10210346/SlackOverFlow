@@ -4,8 +4,10 @@ from dotenv import load_dotenv
 import os
 
 # Slack APIトークンとクライアント設定
+load_dotenv()
 slack_token = os.getenv('SLACK_API_TOKEN')
 client = WebClient(token=slack_token)
+print('Slack APIトークン:', slack_token)
 
 def get_all_channel_history():
     # Slackから全チャンネルの会話履歴を取得する処理

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -107,7 +108,8 @@
     <nav>
         <ul class="container-fluid">
             <li>
-                <img src="header.png" alt="Logo"> <!-- 画像のパスを変更できます -->
+                <!-- djangoのstaticフォルダのheader.png -->
+                <img src="{% static 'chatbot/header.png' %}" alt="SlackOverFlow">
                 <strong>SlackOverFlow</strong>
             </li>
         </ul>
@@ -134,15 +136,17 @@
                 <hr>
 
                 <!-- 回答エリア -->
+                <h5>回答:</h5>
                 <div id="answer" class="answer-card mt-4">
                     <!-- 回答の表示エリア -->
-                    <h5>回答:</h5>
+                    
                 </div>
 
                 <!-- 参考文献エリア -->
+                <h5>参考文献:</h5>
                 <div id="reference" class="reference-card mt-4">
                     <!-- 参考文献の表示エリア -->
-                    <h5>参考文献:</h5>
+                    
                 </div>
             </section>
         </div>
@@ -157,17 +161,19 @@
             fetch(`{% url 'get_answer_to_view' %}?question=${encodeURIComponent(question)}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     if (data.error) {
-                        document.getElementById('answer-text').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-                        document.getElementById('reference-text').innerHTML = '';
+                        document.getElementById('answer').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                        document.getElementById('reference').innerHTML = '';
                     } else {
-                        document.getElementById('answer-text').innerHTML = `<p>${data.answer}</p>`;
-                        document.getElementById('reference-text').innerHTML = `<p>${data.reference}</p>`;
+                        document.getElementById('answer').innerHTML = `<p>${data.answer}</p>`;
+                        document.getElementById('reference').innerHTML = `<p>${data.reference}</p>`;
                     }
                 })
                 .catch(error => {
-                    document.getElementById('answer-text').innerHTML = `<div class="alert alert-danger">エラーが発生しました。</div>`;
-                    document.getElementById('reference-text').innerHTML = '';
+                    console.error(error);
+                    document.getElementById('answer').innerHTML = `<div class="alert alert-danger">エラーが発生しました。</div>`;
+                    document.getElementById('reference').innerHTML = '';
                 });
         });
     </script>
