@@ -13,169 +13,60 @@
             background-color: #f0f8ff;
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
         }
-        nav {
-            width: 100%;
-            background-color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid #ddd;
-        }
-        nav ul {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        nav ul img {
-            margin-right: 10px;
-            height: 40px;
-        }
-        nav ul li {
-            list-style: none;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        main.container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-        .card {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        /* フォームとボタンの横並びを実現（割合を8:2に設定） */
-        .form-group {
-            display: flex;
-            align-items: center;
-        }
-        .form-group input[type="text"] {
-            flex: 8;
-            padding: 0.8rem;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            margin-right: 10px;
-        }
-        .form-group button {
-            flex: 2;
-            padding: 0.8rem 1.5rem;
-            border-radius: 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-
-        /* 回答カードのデザイン */
-        .answer-card {
-            background-color: #e0f7fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 1rem;
-        }
-        /* 参考文献カードのデザイン */
-        .reference-card {
-            background-color: #f4f4f4;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            margin-top: 1rem;
-            font-size: 0.9rem; /* 文字サイズを少し小さく */
-            color: #555; /* フォントカラーを少し薄く */
-        }
-
-        /* レスポンシブデザインの調整 - 画面サイズが狭くなっても横並びを維持 */
-        @media (max-width: 768px) {
-            .form-group {
-                flex-direction: row;
-            }
+        .container {
+            padding: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Slack RAG Chatbot</h1>
 
-    <!-- ナビゲーションバー -->
-    <nav>
-        <ul class="container-fluid">
-            <li>
-                <!-- djangoのstaticフォルダのheader.png -->
-                <img src="{% static 'chatbot/header.png' %}" alt="SlackOverFlow">
-                <strong>SlackOverFlow</strong>
-            </li>
-        </ul>
-    </nav>
+        <!-- CSRFトークンを取得 -->
+        <input type="hidden" id="csrf-token" value="{% csrf_token %}">
 
-    <!-- メインコンテンツ -->
-    <main class="container">
-        <div class="grid">
-            <section class="card">
-                <hgroup>
-                    <h2>SlackOverFlow</h2>
-                    <h3>簡単な操作でストレスフリーな検索</h3>
-                </hgroup>
-                <p>以下のフォームに質問を入力し、送信ボタンを押してください。</p>
+        <!-- RAGを構築ボタン -->
+        <button id="build-rag-btn" class="contrast">RAGを構築</button>
 
-                <!-- 質問フォーム -->
-                <form id="question-form" method="GET" action="{% url 'get_answer_to_view' %}">
-                    <div class="form-group">
-                        <input type="text" id="question" name="question" placeholder="質問を入力..." aria-label="質問を入力" required>
-                        <button type="submit" class="btn-primary">送信</button>
-                    </div>
-                </form>
-
-                <hr>
-
-                <!-- 回答エリア -->
-                <h5>回答:</h5>
-                <div id="answer" class="answer-card mt-4">
-                    <!-- 回答の表示エリア -->
-                    
-                </div>
-
-                <!-- 参考文献エリア -->
-                <h5>参考文献:</h5>
-                <div id="reference" class="reference-card mt-4">
-                    <!-- 参考文献の表示エリア -->
-                    
-                </div>
-            </section>
+        <!-- 質問入力フォーム -->
+        <div>
+            <input type="text" id="question-input" placeholder="質問を入力してください">
+            <button id="ask-btn">質問する</button>
         </div>
-    </main>
 
-    <!-- JavaScript for handling AJAX requests -->
-    <script>
-        document.getElementById('question-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const question = document.getElementById('question').value;
+        <!-- JavaScriptでイベント処理 -->
+        <script>
+            document.getElementById('build-rag-btn').addEventListener('click', function() {
+                fetch('/build_rag/') // Djangoのビュー関数へのリクエスト
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('RAGを構築しました:', data);
+                        alert('RAGの構築が完了しました。質問を入力してください。');
+                    })
+                    .catch(error => console.error('エラー:', error));
+            });
 
-            fetch(`{% url 'get_answer_to_view' %}?question=${encodeURIComponent(question)}`)
+            document.getElementById('ask-btn').addEventListener('click', function() {
+                const question = document.getElementById('question-input').value;
+                const csrfToken = document.getElementById('csrf-token').value;
+
+                fetch('/get_answer/', { // Djangoのビュー関数へのリクエスト
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken // CSRFトークンをヘッダーに追加
+                    },
+                    body: JSON.stringify({ question: question })
+                })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    if (data.error) {
-                        document.getElementById('answer').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-                        document.getElementById('reference').innerHTML = '';
-                    } else {
-                        document.getElementById('answer').innerHTML = `<p>${data.answer}</p>`;
-                        document.getElementById('reference').innerHTML = `<p>${data.reference}</p>`;
-                    }
+                    console.log('回答:', data.answer);
+                    alert('回答: ' + data.answer);
                 })
-                .catch(error => {
-                    console.error(error);
-                    document.getElementById('answer').innerHTML = `<div class="alert alert-danger">エラーが発生しました。</div>`;
-                    document.getElementById('reference').innerHTML = '';
-                });
-        });
-    </script>
+                .catch(error => console.error('エラー:', error));
+            });
+        </script>
+    </div>
 </body>
 </html>
