@@ -10,6 +10,7 @@ import os
 from .slack_client import get_all_channel_history
 from langchain_community.vectorstores import Qdrant
 from dotenv import load_dotenv
+import datetime
 
 
 # .envファイルから環境変数を読み込む
@@ -29,6 +30,10 @@ llm = ChatOpenAI(
     verbose=True
 )
 
+# 日付を取得
+
+today = "今日の日付は:"+str(datetime.datetime.now())
+
 # プロンプトテンプレートの定義
 template = """Answer the question based only on the following context:
 
@@ -36,7 +41,17 @@ template = """Answer the question based only on the following context:
 
 Question: {question}
 
+あなたの回答の内容がカレンダーに登録できそうな内容だったらGoogleCalendarに予定を追加するためのURLをa hrefタグと共に､追加で出力 不必要なら出力しないでいいです｡
+
+ユーザーの使用している言語に合わせて応答してください｡
 """
+
+# templateの末尾に日付を追加
+
+template = template + today
+
+print(template)
+
 prompt = ChatPromptTemplate.from_template(template)
 
 def format_docs(docs):
