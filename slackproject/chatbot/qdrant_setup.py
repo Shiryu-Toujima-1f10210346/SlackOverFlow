@@ -31,7 +31,9 @@ def load_qdrant():
             collection_name=COLLECTION_NAME,
             vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
         )
-        print('collection created')
+        print('-------------collection created-------------')
+    else:
+        print('-------------collection exists-------------')
     
     return Qdrant(
         client=client,

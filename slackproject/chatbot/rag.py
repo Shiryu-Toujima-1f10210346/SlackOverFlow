@@ -35,6 +35,7 @@ template = """Answer the question based only on the following context:
 {context}
 
 Question: {question}
+
 """
 prompt = ChatPromptTemplate.from_template(template)
 
@@ -72,9 +73,6 @@ def build_rag_retriever():
     # Qdrantのセットアップ
     qdrant = load_qdrant()
 
-    # OpenAIの埋め込みモデルのインスタンスを作成
-    embeddings_model = OpenAIEmbeddings(openai_api_base=OPENAI_API_BASE, openai_api_key=OPENAI_API_KEY)
-
     # テキストスプリッタの設定
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1024,  # チャンクのサイズ
@@ -102,6 +100,7 @@ def build_rag_retriever():
     qdrant.add_texts(texts=[doc.page_content for doc in documents], metadatas=[doc.metadata for doc in documents])
 
     # ベクトルストアからの検索用のretrieverを返す
+    # retriever = qdrant.as_retriever(search_type="mmr", k=10, verbose=True, search_kwargs={"score_threshold": 0.7})
     retriever = qdrant.as_retriever(search_type="mmr", k=10, verbose=True)
     
     return retriever
